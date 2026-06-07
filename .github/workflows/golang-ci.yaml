@@ -1,0 +1,39 @@
+name: Golang API CI
+
+on:
+  push:
+    branches: ["main"]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ${{github.workflow}}-${{github.ref}}
+  cancel-in-progress: true
+
+jobs:
+  test:
+    name: Run tests
+    runs-on: ubuntu-24.04
+
+    defaults:
+      run:
+        working-directory: services/go/api-golang
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup environment
+        uses: actions/setup-go@v6
+        with:
+          go-version: "1.25.3"
+          cache: true
+          cache-dependency-path: services/go/api-golang/go.sum
+
+      - name: Download dependencies
+        run: go mod tidy
+
+      - name: Run tests
+        run: go test ./...

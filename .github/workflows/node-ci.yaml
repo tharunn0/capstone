@@ -1,0 +1,39 @@
+name: Node API CI
+
+on:
+  push:
+    branches: ["main"]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ${{github.workflow}}-${{github.ref}}
+  cancel-in-progress: true
+
+jobs:
+  test:
+    name: Run tests
+    runs-on: ubuntu-24.04
+
+    defaults:
+      run:
+        working-directory: services/node/api-node/
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v6
+        with:
+          node-version: 24
+          cache: "npm"
+          cache-dependency-path: services/node/api-node/package-lock.json
+
+      - name: Download dependencies
+        run: npm ci
+
+      - name: Run tests
+        run: npm test
