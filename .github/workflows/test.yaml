@@ -1,0 +1,21 @@
+name: Run Tests
+
+on: workflow_dispatch
+
+jobs:
+  test:
+    runs-on: ubuntu-24.04
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup node
+        uses: actions/setup-node@v6
+        with:
+          node-version: 24
+
+      - name: Download deps and run test
+        run: |
+          cd services/node/api-node
+          npm ci
+          npm test
