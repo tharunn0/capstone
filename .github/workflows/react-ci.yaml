@@ -3,6 +3,9 @@ name: React Client ci
 on:
   push:
     branches: ["main"]
+    paths:
+      - "services/react/client-react/**"
+  workflow_dispatch:
 
 permissions:
   contents: read

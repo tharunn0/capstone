@@ -3,6 +3,8 @@ name: Node API CI
 on:
   push:
     branches: ["main"]
+    paths:
+      - "services/node/api-node/**"
   workflow_dispatch:
 
 permissions:

@@ -3,6 +3,8 @@ name: Golang API CI
 on:
   push:
     branches: ["main"]
+    paths:
+      - "services/go/api-golang/**"
   workflow_dispatch:
 
 permissions:
