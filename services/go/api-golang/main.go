@@ -3,6 +3,7 @@ package main
 import (
 	"io/ioutil"
 	"log"
+	"net/http"
 	"os"
 	"time"
 
@@ -43,6 +44,26 @@ func main() {
 			"api":          "go",
 			"currentTime":  tm,
 			"requestCount": reqCount,
+		})
+	})
+
+	r.GET("/health", func(c *gin.Context) {
+		dbStatus := "UP"
+
+		// Assuming your database package exposes the raw sql.DB or a Ping method
+		// If the DB is down, we change the status and can optionally return a 503 Service Unavailable
+		if err := database.Ping(c); err != nil {
+			dbStatus = "DOWN"
+			c.JSON(http.StatusServiceUnavailable, gin.H{
+				"status":   "DOWN",
+				"database": dbStatus,
+			})
+			return
+		}
+
+		c.JSON(http.StatusOK, gin.H{
+			"status":   "UP",
+			"database": dbStatus,
 		})
 	})
 

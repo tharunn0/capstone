@@ -40,3 +40,13 @@ func GetTimeAndRequestCount(ctx *gin.Context) (time.Time, int) {
 	}
 	return tm, reqCount
 }
+
+func Ping(ctx *gin.Context) error {
+	// pool.Ping verified that a connection to the database is still alive
+	err := pool.Ping(ctx)
+	if err != nil {
+		fmt.Fprintf(os.Stderr, "Database ping failed: %v\n", err)
+		return err
+	}
+	return nil
+}
